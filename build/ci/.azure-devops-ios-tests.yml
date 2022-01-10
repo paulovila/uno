@@ -67,8 +67,8 @@ jobs:
     JobDisplayName: 'iOS Automated Tests Group 01'
     JobTimeoutInMinutes: 60
     vmImage: ${{ parameters.vmImageTest }}
-    UITEST_SNAPSHOTS_ONLY: false
-    UITEST_AUTOMATED_GROUP: 1
+    UITEST_TEST_MODE_NAME: Automated
+    UNO_UITEST_BUCKET_ID: 1 ## Note: Align with UNO_UITEST_BUCKET_COUNT
     UITEST_ALLOW_RERUN: 'true'
     xCodeRoot: ${{ parameters.xCodeRootTest }}
     XamarinSDKVersion: ${{ parameters.XamarinSDKVersionTest }}
@@ -80,8 +80,8 @@ jobs:
     JobDisplayName: 'iOS Automated Tests Group 02'
     JobTimeoutInMinutes: 60
     vmImage: ${{ parameters.vmImageTest }}
-    UITEST_SNAPSHOTS_ONLY: false
-    UITEST_AUTOMATED_GROUP: 2
+    UITEST_TEST_MODE_NAME: Automated
+    UNO_UITEST_BUCKET_ID: 2
     UITEST_ALLOW_RERUN: 'true'
     xCodeRoot: ${{ parameters.xCodeRootTest }}
     XamarinSDKVersion: ${{ parameters.XamarinSDKVersionTest }}
@@ -93,8 +93,8 @@ jobs:
     JobDisplayName: 'iOS Automated Tests Group 03'
     JobTimeoutInMinutes: 60
     vmImage: ${{ parameters.vmImageTest }}
-    UITEST_SNAPSHOTS_ONLY: false
-    UITEST_AUTOMATED_GROUP: 3
+    UITEST_TEST_MODE_NAME: Automated
+    UNO_UITEST_BUCKET_ID: 3 ## Note: Align with UNO_UITEST_BUCKET_COUNT
     UITEST_ALLOW_RERUN: 'true'
     xCodeRoot: ${{ parameters.xCodeRootTest }}
     XamarinSDKVersion: ${{ parameters.XamarinSDKVersionTest }}
@@ -106,8 +106,8 @@ jobs:
     JobDisplayName: 'iOS Automated Runtime Tests'
     JobTimeoutInMinutes: 90
     vmImage: ${{ parameters.vmImageTest }}
-    UITEST_SNAPSHOTS_ONLY: false
-    UITEST_AUTOMATED_GROUP: 4
+    UITEST_TEST_MODE_NAME: RuntimeTests
+    UITEST_AUTOMATED_GROUP: RuntimeTests
     UITEST_ALLOW_RERUN: 'false'
     xCodeRoot: ${{ parameters.xCodeRootTest }}
     XamarinSDKVersion: ${{ parameters.XamarinSDKVersionTest }}
@@ -132,7 +132,7 @@ jobs:
     JobDisplayName: 'iOS Snaphot Tests Group 01'
     JobTimeoutInMinutes: 45
     vmImage: ${{ parameters.vmImageTest }}
-    UITEST_SNAPSHOTS_ONLY: true
+    UITEST_TEST_MODE_NAME: Snapshots
     UITEST_SNAPSHOTS_GROUP: 00
     UITEST_ALLOW_RERUN: 'true'
     xCodeRoot: ${{ parameters.xCodeRootTest }}
@@ -145,7 +145,7 @@ jobs:
     JobDisplayName: 'iOS Snaphot Tests Group 02'
     JobTimeoutInMinutes: 45
     vmImage: ${{ parameters.vmImageTest }}
-    UITEST_SNAPSHOTS_ONLY: true
+    UITEST_TEST_MODE_NAME: Snapshots
     UITEST_SNAPSHOTS_GROUP: 01
     UITEST_ALLOW_RERUN: 'true'
     xCodeRoot: ${{ parameters.xCodeRootTest }}
@@ -158,7 +158,7 @@ jobs:
     JobDisplayName: 'iOS Snaphot Tests Group 03'
     JobTimeoutInMinutes: 45
     vmImage: ${{ parameters.vmImageTest }}
-    UITEST_SNAPSHOTS_ONLY: true
+    UITEST_TEST_MODE_NAME: Snapshots
     UITEST_SNAPSHOTS_GROUP: 02
     UITEST_ALLOW_RERUN: 'true'
     xCodeRoot: ${{ parameters.xCodeRootTest }}
@@ -171,7 +171,7 @@ jobs:
     JobDisplayName: 'iOS Snaphot Tests Group 04'
     JobTimeoutInMinutes: 45
     vmImage: ${{ parameters.vmImageTest }}
-    UITEST_SNAPSHOTS_ONLY: true
+    UITEST_TEST_MODE_NAME: Snapshots
     UITEST_SNAPSHOTS_GROUP: 03
     UITEST_ALLOW_RERUN: 'true'
     xCodeRoot: ${{ parameters.xCodeRootTest }}

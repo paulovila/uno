@@ -41,7 +41,7 @@ namespace SamplesApp.UITests
 
 			// Start the app only once, so the tests runs don't restart it
 			// and gain some time for the tests.
-			AppInitializer.ColdStartApp();
+			// AppInitializer.ColdStartApp();
 		}
 
 		public void ValidateAppMode()
@@ -71,8 +71,8 @@ namespace SamplesApp.UITests
 
 			// Check if the test needs to be ignore or not
 			// If nothing specified, it is considered as a global test
-			var platforms = GetActivePlatforms().Distinct().ToArray();
-			if (platforms.Length != 0)
+			var platforms = GetActivePlatforms()?.Distinct().ToArray();
+			if (platforms != null)
 			{
 				// Otherwise, we need to define on which platform the test is running and compare it with targeted platform
 				var shouldIgnore = false;
@@ -102,7 +102,7 @@ namespace SamplesApp.UITests
 				{
 					var list = string.Join(", ", platforms.Select(p => p.ToString()));
 
-					Assert.Ignore($"This test is ignored on this platform (runs on {list})");
+					Assert.Ignore($"This test is ignored on this platform (runs on [{list}])");
 				}
 			}
 
@@ -213,18 +213,24 @@ namespace SamplesApp.UITests
 			return methodInfo?.GetCustomAttributes(typeof(T), true) is T[] array ? array : new T[0];
 		}
 
-		private IEnumerable<Platform> GetActivePlatforms()
+		private Platform[] GetActivePlatforms()
 		{
 			var currentTest = TestContext.CurrentContext.Test;
 			if (currentTest.ClassName == null)
 			{
-				yield break;
+				return new Platform[0];
 			}
+
+			List<Platform> classPlatforms = null;
+			List<Platform> methodPlatforms = null;
+
 			if (Type.GetType(currentTest.ClassName) is { } classType)
 			{
 				if (classType.GetCustomAttributes(typeof(ActivePlatformsAttribute), false) is
-					ActivePlatformsAttribute[] classAttributes)
+					ActivePlatformsAttribute[] classAttributes && classAttributes.Length != 0)
 				{
+					classPlatforms = new List<Platform>();
+
 					foreach (var attr in classAttributes)
 					{
 						if (attr.Platforms == null)
@@ -234,7 +240,7 @@ namespace SamplesApp.UITests
 
 						foreach (var platform in attr.Platforms)
 						{
-							yield return platform;
+							classPlatforms.Add(platform);
 						}
 					}
 				}
@@ -245,8 +251,10 @@ namespace SamplesApp.UITests
 
 					if (testMethodInfo is { } mi &&
 					    mi.GetCustomAttributes(typeof(ActivePlatformsAttribute), false) is
-						    ActivePlatformsAttribute[] methodAttributes)
+						    ActivePlatformsAttribute[] methodAttributes && methodAttributes.Length != 0)
 					{
+						methodPlatforms = new List<Platform>();
+
 						foreach (var attr in methodAttributes)
 						{
 							if (attr.Platforms == null)
@@ -256,13 +264,22 @@ namespace SamplesApp.UITests
 
 							foreach (var platform in attr.Platforms)
 							{
-								yield return platform;
+								// If a list of platforms is specified on the class
+								// then unavailable platforms are excluded even when used on the
+								// test method.
+								if (classPlatforms == null || classPlatforms.Contains(platform))
+								{
+									methodPlatforms.Add(platform);
+								}
 							}
 						}
 					}
 				}
-
 			}
+
+			return methodPlatforms?.ToArray()
+				?? classPlatforms?.ToArray()
+				?? null;
 		}
 
 		protected void Run(string metadataName, bool waitForSampleControl = true, bool skipInitialScreenshot = false, int sampleLoadTimeout = 5)
