@@ -919,6 +919,14 @@ namespace Windows.UI.Xaml
 		}
 #endif
 
+		public void FixThemeBinding()
+		{
+			Resources?.UpdateThemeBindings(ResourceUpdateReason.ThemeResource);
+			(this as IDependencyObjectStoreProvider).Store.UpdateResourceBindings(ResourceUpdateReason.ThemeResource);
+		}
+
+		public void InvokeUpdateThemeBindings(ResourceUpdateReason updateReason) => UpdateThemeBindings(updateReason);
+
 		/// <summary>
 		/// Update ThemeResource references. 
 		/// </summary>

@@ -330,6 +330,8 @@ namespace Windows.UI.Xaml
 
 		private void OnResourcesChanged(ResourceUpdateReason updateReason)
 		{
+			this.Log().Debug($"@xy Application::OnResourcesChanged({updateReason})");
+
 			if (GetTreeRoot() is { } root)
 			{
 				// Update theme bindings in application resources
@@ -360,6 +362,7 @@ namespace Windows.UI.Xaml
 		/// </summary>
 		internal static void PropagateResourcesChanged(object instance, ResourceUpdateReason updateReason)
 		{
+			typeof(Application).Log().Debug($"@xy Application::PropagateResourcesChanged({instance?.GetType().Name}#{instance?.GetHashCode():X8}, {updateReason})");
 
 			// Update ThemeResource references that have changed
 			if (instance is FrameworkElement fe)

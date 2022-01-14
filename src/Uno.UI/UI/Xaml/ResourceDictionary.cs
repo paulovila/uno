@@ -1,4 +1,4 @@
-//#define DEBUG_SET_RESOURCE_SOURCE
+#define DEBUG_SET_RESOURCE_SOURCE
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -21,6 +21,8 @@ namespace Windows.UI.Xaml
 		private readonly SpecializedResourceDictionary _values = new SpecializedResourceDictionary();
 		private readonly List<ResourceDictionary> _mergedDictionaries = new List<ResourceDictionary>();
 		private ResourceDictionary _themeDictionaries;
+
+		private WeakReference<ResourceDictionary> _sourceDictionary;
 
 		/// <summary>
 		/// This event is fired when a key that has value of type <see cref="ResourceDictionary"/> is added or changed in the current <see cref="ResourceDictionary" />
@@ -424,6 +426,7 @@ namespace Windows.UI.Xaml
 			_mergedDictionaries.Clear();
 			_themeDictionaries?.Clear();
 
+			_sourceDictionary = new WeakReference<ResourceDictionary>(source);
 			_values.AddRange(source._values);
 			_mergedDictionaries.AddRange(source._mergedDictionaries);
 			if (source._themeDictionaries != null)
@@ -555,6 +558,14 @@ namespace Windows.UI.Xaml
 			foreach (var mergedDict in _mergedDictionaries)
 			{
 				mergedDict.UpdateThemeBindings(updateReason);
+			}
+
+			if (FeatureConfiguration.ThemeFixAttempts.EnabledLinkedCopiesPropagation)
+			{
+				if (_sourceDictionary?.TryGetTarget(out var target) == true)
+				{
+					target.UpdateThemeBindings(updateReason);
+				}
 			}
 		}
 

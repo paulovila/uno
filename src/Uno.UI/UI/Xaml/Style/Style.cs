@@ -30,6 +30,7 @@ namespace Windows.UI.Xaml
 		private readonly XamlScope _xamlScope;
 		private Dictionary<object, SetterBase>? _settersMap;
 		private SetterBase[]? _flattenedSetters;
+		private SpecializedResourceDictionary.ResourceKey? _themeLastUsed;
 
 		public Style()
 		{
@@ -91,8 +92,26 @@ namespace Windows.UI.Xaml
 					}
 				}
 
+				var reason = ResourceUpdateReason.StaticResourceLoading;
+				if (FeatureConfiguration.ThemeFixAttempts.ForceThemeUpdateOnStyleApplication)
+				{
+					//if (o is Windows.UI.Xaml.Controls.TextBox)
+					//{
+					//	reason |= ResourceUpdateReason.ThemeResource;
+					//}
+					if (_themeLastUsed is null)
+					{
+						_themeLastUsed = Application.Current?.RequestedThemeForResources;
+					}
+					else if (Application.Current?.RequestedThemeForResources is { } currentTheme && !currentTheme.Equals(_themeLastUsed))
+					{
+						_themeLastUsed = currentTheme;
+						reason |= ResourceUpdateReason.ThemeResource;
+					}
+				}
+
 				// Check tree for resource binding values, since some Setters may have set ThemeResource-backed values
-				(o as IDependencyObjectStoreProvider)!.Store.UpdateResourceBindings(ResourceUpdateReason.StaticResourceLoading);
+				(o as IDependencyObjectStoreProvider)!.Store.UpdateResourceBindings(reason);
 			}
 #if !HAS_EXPENSIVE_TRYFINALLY
 			finally

@@ -14,6 +14,12 @@ namespace Uno.UI
 {
 	public static class FeatureConfiguration
 	{
+		public static class ThemeFixAttempts
+		{
+			public static bool ForceThemeUpdateOnStyleApplication { get; set; } = false;
+			public static bool EnabledLinkedCopiesPropagation { get; set; } = false;
+		}
+
 		public static class ApiInformation
 		{
 			/// <summary>

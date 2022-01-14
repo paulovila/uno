@@ -8,7 +8,7 @@ using Uno.UI.DataBinding;
 namespace Windows.UI.Xaml.Data
 {
 	[Flags]
-	internal enum ResourceUpdateReason
+	public enum ResourceUpdateReason
 	{
 		None = 0,
 		/// <summary>
